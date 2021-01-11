@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="en">
+    <head>
+        <title>Employee Form</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>
+                Employee details
+            </h1>
+            <form id="empform" method="POST">
+                <div class="form-group">
+                    <label>Employee ID</label>
+                    <input type="text" id="empid" placeholder="Employee ID" class="form-control"/>
+                    <label>Employee Name</label>
+                    <input type="text" id="empname" placeholder="Employee name" class="form-control"/>
+                    <label>Employee Email</label>
+                    <input type="email" id="empmail" placeholder="Employee email" class="form-control"/>
+                    <br>
+                    <input type="button" id="sbtbtn" onclick="submitform()" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+        <script>
+            function validateandgetdata(){
+                var empid = $("#empid").val();
+                var empname = $("#empname").val();
+                var empmail = $("#empmail").val();
+                if(empid==="" || empname==="" || empmail===""){
+                    alert("All fields required");
+                    return "";
+                }
+                var jsonstr = {
+                    empId : empid,
+                    empName : empname,
+                    empEmail : empmail
+                };
+                return JSON.stringify(jsonstr);
+            }
+            function PUTrequest(con_token,jsonfile,Dbname,Relname){
+                var str = "{\n"
+                +"\"token\" : \""
+                +con_token
+                +"\","
+                +"\"dbName\":\""
+                +Dbname
+                +"\",\n"+"\"cmd\" :\"PUT\",\n"
+                +"\"rel\" :\""
+                +Relname +"\","
+                +"\"jsonStr\":\n"
+                +jsonfile
+                +"\n"
+                +"}";
+                return str;
+            }
+            function execute(reqstr,baseurl,apiendpoint){
+                var url = baseurl+apiendpoint;
+                var jsonobject;
+                $.post(url,reqstr,function(result){
+                    jsonobject = JSON.parse(result);
+                }).fail(function(result){
+                    jsonobject = JSON.parse(result.responseText);
+                });
+                return jsonobject;
+            }
+            function submitform(){
+                var jsonfile = validateandgetdata();
+                if(jsonfile===""){
+                    return;
+                }
+                var put_request = PUTrequest("90937263|-31948794028082830|90932771",jsonfile,"SAMPLE","EMP-REL");
+                jQuery.ajaxSetup({async:false});
+                var res = execute(put_request,"http://api.login2explore.com:5577","/api/iml");
+                jQuery.ajaxSetup({async:true});
+                resetForm();
+            }
+            function resetForm(){
+                $("#empid").val("");
+                $("#empname").val("");
+                $("#empmail").val("");
+            }
+        </script>
+    </body>
+</html>
