@@ -78,7 +78,7 @@ and open the template in the editor.
                 if(jsonfile===""){
                     return;
                 }
-                var put_request = PUTrequest("90937263|-31948794028082830|90932771",jsonfile,"SAMPLE","EMP-REL");
+                var put_request = PUTrequest("KEY",jsonfile,"SAMPLE","EMP-REL");
                 jQuery.ajaxSetup({async:false});
                 var res = execute(put_request,"http://api.login2explore.com:5577","/api/iml");
                 jQuery.ajaxSetup({async:true});
